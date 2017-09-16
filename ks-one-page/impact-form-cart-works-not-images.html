@@ -1,0 +1,343 @@
+<!--- Bold Apps: Premium Options -->
+{% if product.metafields.inventory.ShappifyHidden == "true" %}
+Product is not available
+{% else %}
+
+<div itemscope itemtype="http://schema.org/Product">
+
+  <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
+  <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
+  
+  <div class="section small-section red text-right hidden-xs">
+    <div class="container">
+      <i class="fa fa-truck"></i> FREE SHIPPING WHEN 2ND GUARD IS PURCHASED!
+    </div><!-- /.container -->
+  </div><!-- /.section -->
+
+  {% include 'breadcrumb' %}
+
+<div id="product" class="{{ product.handle }}">
+  <div class="container">
+  <div class="row clearfix">
+    
+    <!-- Begin product photos -->
+    <div class="col-sm-8">
+      
+      <!-- Begin featured image -->
+      <div class="image featured">
+        {% if product.images.size > 0 %}       
+        {% assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+        {% if settings.enable_product_image_zoom %}
+        <img src="{{ featured_image | img_url: '1024x1024' }}" alt="{{ featured_image.alt | escape }}" />
+        {% else %}
+        <a href="{{ featured_image | img_url: '1024x1024' }}" class="zoom" id="placeholder">
+          <img src="{{ featured_image | img_url: '1024x1024' }}" alt="{{ featured_image.alt | escape }}" />
+        </a>
+        {% endif %}
+        {% else %}
+        <img src="{{ 'No_Image_2.png' | asset_url }}" />
+        {% endif %}
+      </div>
+      <!-- End product image -->
+
+      {% if product.images.size > 1%}
+      	<div class="row" id="ProductThumbs">
+        	{% for image in product.images %}
+                <div class="col-xs-4 col-sm-2">
+                  <a data-image-id="{{ image.id }}" href="{{ image.src | img_url: '1024x1024' }}" class="product-single__thumbnail">
+                    <img src="{{ image.src | img_url: 'grande' }}" alt="{{ image.alt | escape }}">
+                  </a>
+                </div>
+              {% endfor %}
+        </div>
+      {% endif %}
+      
+      <hr />
+      
+      <div class="description">
+          {{ product.description }}
+       </div> 
+       
+       {% if settings.social_sharing_products %}
+            <hr class="hr--clear hr--small">
+            {% include 'social-sharing' %}
+       		<hr />
+       {% endif %}
+      
+    </div>
+    <!-- End product photos -->
+ 
+    
+    
+    <!-- Begin description -->
+    <div class="col-sm-4">
+      
+      <h1 itemprop="name" class="title">{{ product.title }}</h1>
+      {% assign variant = product.selected_or_first_available_variant %}
+      
+      <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="price-block clearfix">
+        <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+	      <div class="purchase">
+	        <h2 itemprop="price" class="price" id="price-preview">{{ variant.price | money }}{% if variant.price < variant.compare_at_price %} <del>{{ variant.compare_at_price | money }}</del>{% endif %}</h2>
+	      </div>
+      
+      {% assign hide_default_title = false %}
+      {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+        {% assign hide_default_title = true %}
+      {% endif %}
+      
+      </div><!-- end price-block -->
+      
+      <div>
+      
+        <form id="add-item-form" action="/cart/add" method="post" class="variants clearfix shappify_add_to_cart_form" enctype="multipart/form-data">
+
+          <!-- Begin product options -->
+          <div class="product-options {% if hide_default_title %}no-options {% endif %}">
+            
+            <div class="featured-box">
+
+              <div class="select clearfix form-group"{% if hide_default_title %} style="display:none"{% endif %}>
+                <select id="product-select" name="id" class="form-control">
+                  {% for variant in product.variants %}
+                  <option value="{{ variant.id }}"{% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %}>{{ variant.title }} - {{ variant.price | money }}</option>
+                  {% endfor %}
+                </select>
+                <small><em>Looking for a Custom Color? <u><a href="/pages/contact-us">Contact Us</a></u></em></small>
+              </div>
+
+              {% if settings.display_quantity_dropdown %}
+              <div class="selector-wrapper">
+                <label>Quantity</label>
+                <input id="quantity" type="number" name="quantity" value="1" class="tc item-quantity" />
+              </div>
+              {% endif %}
+        
+              <h3><i class="fa fa-plus-circle" style="color:#dd0319;"></i> Upgrades</h3>
+              	<!-- Bold Apps: Product Options -->
+				{% include 'shappify-options' %} 
+              
+              <div class="purchase-section{% if product.variants.size > 1 %} multiple{% endif %}">
+              <div class="purchase">
+                {% unless product.available %}
+                <p>Sold Out</p>
+                {% else %}
+                <input type="submit" id="add-to-cart" class="btn btn-primary btn-lg addtocart" name="add" value="Add to cart" />
+                <div id="cart-animation" style="display:none">1</div>
+                {% endunless %}
+              </div>
+          </div>
+              
+            </div>
+
+          </div>
+          <!-- End product options -->
+
+        </form>
+      </div>
+        
+      </div>
+    
+    </div>
+  </div>
+    <!-- End description -->
+    
+    <div class="section big-section gray text-center">
+      <div class="container">    	
+    	<h3>Impact Videos</h3>
+    	
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="video-container">
+            	<a href="https://www.youtube.com/watch?v=aQikUU-1Vq0" class="lightbox">
+                	<span class="fa-stack fa-2x">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-play fa-stack-1x fa-inverse"></i>
+                      </span>
+                	<div class="shader"></div>
+                	<img src="https://img.youtube.com/vi/aQikUU-1Vq0/mqdefault.jpg" alt="" class="aligncenter size-medium wp-image-4192" />
+            	</a>
+            </div>
+            <p class="video-title">Impact Mouthguards: The Instructional Video</p>
+          </div><!-- /.col3 -->
+          <div class="col-sm-3">
+            <div class="video-container">
+            	<a href="https://www.youtube.com/watch?v=qP9RQHZTKZc" class="lightbox">
+                	<span class="fa-stack fa-2x">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-play fa-stack-1x fa-inverse"></i>
+                      </span>
+                	<div class="shader"></div>
+                	<img src="https://img.youtube.com/vi/qP9RQHZTKZc/mqdefault.jpg" alt="" class="aligncenter size-medium wp-image-4192" />
+            	</a>
+            </div>
+            <p class="video-title">Brett "The Spyder" Sbardella Endorsement</p>
+          </div><!-- /.col3 -->
+          <div class="col-sm-3">
+            <div class="video-container">
+            	<a href="https://www.youtube.com/watch?v=1tZA2uu3G0A" class="lightbox">
+                	<span class="fa-stack fa-2x">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-play fa-stack-1x fa-inverse"></i>
+                      </span>
+                	<div class="shader"></div>
+                	<img src="https://img.youtube.com/vi/1tZA2uu3G0A/mqdefault.jpg" alt="" class="aligncenter size-medium wp-image-4192" />
+            	</a>
+            </div>
+            <p class="video-title">Review of Impact Custom Mouthguards</p>
+          </div><!-- /.col3 -->
+          <div class="col-sm-3">
+            <div class="video-container">
+            	<a href="https://www.youtube.com/watch?v=ChFdX0K1cac" class="lightbox">
+                	<span class="fa-stack fa-2x">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-play fa-stack-1x fa-inverse"></i>
+                      </span>
+                	<div class="shader"></div>
+                	<img src="https://img.youtube.com/vi/ChFdX0K1cac/mqdefault.jpg" alt="" class="aligncenter size-medium wp-image-4192" />
+            	</a>
+            </div>
+            <p class="video-title">Review of Impact Mouthguards</p>
+          </div><!-- /.col3 -->
+        </div><!-- /.row -->
+    		
+      </div><!-- /.container -->
+    </div><!-- /.section -->
+
+  	<div class="section big-section">
+      <div class="container">
+        <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+      </div><!-- /.container -->
+    </div><!-- /.section -->
+    
+  <!-- Begin related product -->
+  {% if settings.show_related_products %}
+    {% include 'related-products' %}
+  {% endif %}
+</div> 
+</div>
+
+<div style="display:none" id="preloading">
+{% for image in product.images offset: 1 %}
+{{ image | product_img_url: '1024x1024' | img_tag }}
+{% endfor %}
+</div>
+  
+  <script>
+  var selectCallback = function(variant, selector) {
+    if (variant && variant.featured_image) {
+      var newImage = variant.featured_image; // New image object.
+      var mainImageDomEl = jQuery('.featured img')[0]; // DOM element of main image we need to swap.
+      Shopify.Image.switchImage(newImage, mainImageDomEl, switchImage); // Define switchImage (the callback) in your theme's JavaScript file.
+    }
+    if (variant && variant.available) {
+      jQuery('#add-to-cart').removeAttr('disabled').removeClass('disabled'); // remove unavailable class from add-to-cart button, and re-enable button
+      if(variant.price < variant.compare_at_price){
+        jQuery('#price-preview').html(Shopify.formatMoney(variant.price, "{{ shop.money_format }}") + " <del>" + Shopify.formatMoney(variant.compare_at_price, "{{ shop.money_format }}") + "</del>");
+      } else {
+        jQuery('#price-preview').html(Shopify.formatMoney(variant.price, "{{ shop.money_format }}"));
+      }
+    } else {
+      jQuery('#add-to-cart').addClass('disabled').attr('disabled', 'disabled'); // set add-to-cart button to unavailable class and disable button
+      var message = variant ? "Sold Out" : "Unavailable";
+      jQuery('#price-preview').text(message);
+    }
+  };
+  
+  jQuery(document).ready(function($){
+    new Shopify.OptionSelectors("product-select", { product: {{ product | json }}, onVariantSelected: selectCallback, enableHistoryState: true });
+
+    // Add label if only one product option and it isn't 'Title'.
+    {% if product.options.size == 1 and product.options.first != 'Title' %}
+      $('.selector-wrapper:eq(0)').prepend('<label>{{ product.options.first | escape }}</label>');
+    {% endif %}
+
+  });
+  </script>
+
+<!--- Bold Apps: Premium Options --> {% endif %}
+
+{{ 'option_selection.js' | shopify_asset_url | script_tag }}
+<script>
+  var selectCallback = function(variant, selector) {
+    timber.productPage({
+      money_format: "{{ shop.money_format }}",
+      variant: variant,
+      selector: selector,
+      translations: {
+        add_to_cart : "{{ 'products.product.add_to_cart' | t }}",
+        sold_out : "{{ 'products.product.sold_out' | t }}",
+        unavailable : "{{ 'products.product.unavailable' | t }}"
+      }
+    });
+  };
+
+  jQuery(function($) {
+    new Shopify.OptionSelectors('productSelect', {
+      product: {{ product | json }},
+      onVariantSelected: selectCallback,
+      enableHistoryState: true
+    });
+
+    // Add label if only one product option and it isn't 'Title'. Could be 'Size'.
+    {% if product.options.size == 1 and product.options.first != 'Title' %}
+      $('.selector-wrapper:eq(0)').prepend('<label for="productSelect-option-0">{{ product.options.first | escape }}</label>');
+    {% endif %}
+
+    // Hide selectors if we only have 1 variant and its title contains 'Default'.
+    {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+      $('.selector-wrapper').hide();
+    {% endif %}
+  });
+</script>
+
+{% comment %}
+Place this in your product.liquid template, at the bottom.
+{% endcomment %}
+{% if product.variants.size > 1 %}
+<script>
+(function($) { 
+  var variantImages = {},
+    thumbnails,
+    variant,
+    variantImage,
+    optionValue;
+    {% for variant in product.variants %}
+       variant = {{ variant | json }};
+       if ( typeof variant.featured_image !== 'undefined' && variant.featured_image !== null ) {
+         variantImage =  variant.featured_image.src.split('?')[0].replace(/http(s)?:/,'');
+         variantImages[variantImage] = variantImages[variantImage] || {};
+         {% for option in product.options %}
+           {% assign option_value = variant.options[forloop.index0] %}
+           {% assign option_key = 'option-' | append: forloop.index0 %}
+           if (typeof variantImages[variantImage][{{ option_key | json }}] === 'undefined') {
+             variantImages[variantImage][{{ option_key | json }}] = {{ option_value | json }};
+           }
+           else {
+             var oldValue = variantImages[variantImage][{{ option_key | json }}];
+             if ( oldValue !== null && oldValue !== {{ option_value | json }} )  {
+               variantImages[variantImage][{{ option_key | json }}] = null;
+             }
+           }
+         {% endfor %}
+       }
+    {% endfor %}
+    $(function() {
+      thumbnails = $('img[src*="/products/"]').not(':first');
+      if (thumbnails.size()) {
+        thumbnails.bind('click', function() {
+          var image = $(this).attr('src').split('?')[0].replace(/(_thumb\.)|(_small\.)|(_compact\.)|(_medium\.)|(_large\.)|(_grande\.)/,'.');
+          if (typeof variantImages[image] !== 'undefined') {
+            {% for option in product.options %}
+            optionValue = variantImages[image]['option-{{ forloop.index0 }}'];
+            if (optionValue !== null && $('.single-option-selector:eq({{ forloop.index0 }}) option').filter(function() { return $(this).text() === optionValue }).length) {
+              $('.single-option-selector:eq({{ forloop.index0 }})').val(optionValue).trigger('change');
+            }
+            {% endfor %}
+          }
+        });
+      }
+    });
+})(jQuery);
+</script> 
+{% endif %}
